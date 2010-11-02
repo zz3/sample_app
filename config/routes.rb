@@ -44,6 +44,8 @@ ActionController::Routing::Routes.draw do |map|
   map.help "/help", :controller => "pages", :action => "help"
   map.list "/list", :controller => "pages", :action => "list"
   
+  map.signup "/signup", :controller => "users", :action => "new"
+  
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
 end
