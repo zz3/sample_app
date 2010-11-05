@@ -46,6 +46,8 @@ ActionController::Routing::Routes.draw do |map|
   
   map.signup "/signup", :controller => "users", :action => "new"
   
+  map.resources :users
+  
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
 end
