@@ -5,13 +5,72 @@ describe User do
   before(:each) do
     @valid_attributes = {
       :name => "value for name",
-      :email => "name@email.de"
+      :email => "name@email.de",
+      :password => "secret",
+      :password_confirmation => "secret"
     }
   end
 
   it "should create a new instance given valid attributes" do
     User.create!(@valid_attributes)
   end
+  
+  describe "Password encryption" do
+    before(:each) do
+      @user = User.create!(@valid_attributes)
+    end
+    
+    describe "has_password? method" do
+      it "should return true if the submitted password matches the existing" do
+        @user.has_password?(@valid_attributes[:password]).should be_true
+      end
+      
+      it "should return false if the submitted password doesn't matche the existing" do
+        @user.has_password?("invalid").should be_false
+      end
+    end
+    
+#    it "should have a password encryption method" do
+#      @user.respond_to?("encrypt_password").should be_true # same as...
+#      @user.should respond_to(:encrypt_password)
+#    end
+    
+    it "should have an encrypted_password attribute" do
+      @user.respond_to?("encrypted_password").should be_true # same as...
+      @user.should respond_to(:encrypted_password)
+    end
+    
+    it "should set attribute encrypted_password, so it's not blank" do
+      @user.encrypted_password.should_not be_blank
+    end
+    
+  end
+  
+  describe "Password validations" do
+    it "should reject an empty password" do
+        User.create(@valid_attributes.merge(:password => "", :password_confirmation => "")).
+          should_not be_valid
+      end
+    
+    it "should require a matching password confirmation" do
+      User.create(@valid_attributes.merge(:password => "secret1", :password_confirmation => "secret2")).
+        should_not be_valid
+    end
+    
+    it "should reject a password shorter than 5 characters" do
+      short = "a" * 4
+      User.create(@valid_attributes.merge(:password => short, :password_confirmation => short)).
+      should_not be_valid
+    end
+    
+    it "should reject a password longer than 30 characters" do
+      long = "a" * 31
+      User.create(@valid_attributes.merge(:password => long, :password_confirmation => long)).
+        should_not be_valid
+    end
+    
+  end
+  
   
   it "should require a name" do
     no_name_user = User.new(@valid_attributes.merge(:name => ""))
