@@ -33,6 +33,15 @@ class User < ActiveRecord::Base
     self.encrypted_password == encrypt(submitted_password)
   end
   
+  def self.authenticate(email, submitted_password)
+    user = find_by_email(email)
+    if (!user.nil?() && user.has_password?(submitted_password))
+      return user
+    else
+      user = nil
+    end
+  end
+  
   private
   
   def encrypt_password
@@ -50,6 +59,5 @@ class User < ActiveRecord::Base
   
   def make_salt
     secure_hash("#{Time.now.utc}#{self.password}")
-#    secure_hash("abc")
   end
 end
