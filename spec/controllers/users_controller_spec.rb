@@ -8,14 +8,39 @@ describe UsersController do
   it "should use UsersController" do
     controller.should be_an_instance_of(UsersController)
   end
-
+  describe "POST 'create'" do
+    describe "failure" do
+      before(:each) do
+        @attr = {:name => "", :email => "", :password => "", :password_confirmation => "" }
+        @user = User.build(:user, @attr)
+        User.stub!(:new).and_return(@user)
+        @user.should_receive(:save).and_return(false)
+      end
+#      describe "sie sollte den richtigen Titel haben" do
+#        post(:create, :user => @attr)
+#        response.should have_tag("title", /sign up/i)
+#      end
+#      describe "sie sollte die 'new'-Seite wiedergeben" do
+#        post :create, :user => @attr
+#        response.should render_template('new')
+      end
+      
+    describe "success" do
+      before(:each) do
+        @attr = {:name => "Hein Blöd", :email => "hein@bloed.de", :password => "sehrgehein", :password_confirmation => "sehrgehein" }
+        @user = User.build(:user, @attr)
+        User.stub!(:new).and_return(@user)
+        @user.should_receive(:save).and_return(true)
+      end
+    end
+    
+  end
 
   describe "GET 'new'" do
     it "should be successful" do
       get :new
       response.should be_success
     end
-    
     it "should have the right title" do
       get 'new'
       response.should have_tag("title", /Sign Up/)

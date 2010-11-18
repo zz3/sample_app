@@ -1,5 +1,6 @@
 <h1>Registrieren</h1>
 <% form_for(@user) do |f| %>
+	<%= f.error_messages %>
 	<div class="field">
 		<%= f.label :name %><br/>
 		<%= f.text_field :name %>
