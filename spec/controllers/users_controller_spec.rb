@@ -12,25 +12,38 @@ describe UsersController do
     describe "failure" do
       before(:each) do
         @attr = {:name => "", :email => "", :password => "", :password_confirmation => "" }
-        @user = User.build(:user, @attr)
+        @user = Factory.build(:user, @attr)
         User.stub!(:new).and_return(@user)
         @user.should_receive(:save).and_return(false)
       end
-#      describe "sie sollte den richtigen Titel haben" do
-#        post(:create, :user => @attr)
-#        response.should have_tag("title", /sign up/i)
-#      end
-#      describe "sie sollte die 'new'-Seite wiedergeben" do
-#        post :create, :user => @attr
-#        response.should render_template('new')
+      it "sie sollte den richtigen Titel haben" do
+        post(:create, :user => @attr)
+        response.should have_tag("title", /sign up/i)
       end
+      it "sie sollte die 'new'-Seite erneut darstellen" do
+        post :create, :user => @attr
+        response.should render_template('new')
+      end
+    end
       
     describe "success" do
       before(:each) do
-        @attr = {:name => "Hein Blöd", :email => "hein@bloed.de", :password => "sehrgehein", :password_confirmation => "sehrgehein" }
-        @user = User.build(:user, @attr)
+        @attr = {:name => "Heiner Bloeder", :email => "xy@xy.de", :password => "sehrgehein", :password_confirmation => "sehrgehein" }
+        @user = Factory.build(:user, @attr)
         User.stub!(:new).and_return(@user)
         @user.should_receive(:save).and_return(true)
+      end
+#      it "sollte ein redirect auslösen zur Seite user show" do
+#        post :create, :user => @attr
+#        response.should redirect_to(user_path(@user))
+#      end
+      it "sollte eine Willkommens-Meldung ausgeben" do
+        post :create, :user => @attr
+        flash[:success].should =~ /willkommen/i
+      end
+      it "sollte den User einloggen (signed_in == true)" do
+        post :create, :user => @attr
+        controller.should be_signed_in
       end
     end
     
@@ -44,6 +57,22 @@ describe UsersController do
     it "should have the right title" do
       get 'new'
       response.should have_tag("title", /Sign Up/)
+    end
+    it "sollte ein Eingabe-Feld mit dem Namen user[name] haben" do
+      get :new
+      response.should have_tag("input[name=?][type=?]", "user[name]", "text")
+    end
+    it "sollte ein Eingabe-Feld mit dem Namen user[email] haben" do
+      get :new
+      response.should have_tag("input[name=?][type=?]", "user[email]", "text")
+    end
+    it "sollte ein Eingabe-Feld mit dem Namen user[password] haben" do
+      get :new
+      response.should have_tag("input[name=?][type=?]", "user[password]", "password")
+    end
+    it "sollte ein Eingabe-Feld mit dem Namen user[password_confirmation] haben" do
+      get :new
+      response.should have_tag("input[name=?][type=?]", "user[password_confirmation]", "password")
     end
   end
   

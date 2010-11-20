@@ -9,10 +9,32 @@ describe User do
       :password => "secret",
       :password_confirmation => "secret"
     }
+    @attr = {
+          :name => "Hein Blöd",
+          :email => "hein@hein.de",
+          :password => "gehein",
+          :password_confirmation => "gehein"
+        }
   end
 
   it "should create a new instance given valid attributes" do
     User.create!(@valid_attributes)
+  end
+  
+  describe "Remember token" do
+    before(:each) do
+      @user = User.create!(@attr)
+    end
+    it "sollte ein Remember token haben" do
+      @user.should respond_to(:remember_token)
+    end
+    it "sollte eine Methode remember me! haben" do
+      @user.should respond_to(:remember_me!)
+    end
+    it "sollte ein Remember token setzen" do
+      @user.remember_me!
+      @user.remember_token.should_not be_nil
+    end
   end
   
   

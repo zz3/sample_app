@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe "Users" do
+ 
   describe "signup" do
     describe "failure" do
       it "sollte keinen neuen User anlegen" do
@@ -22,8 +23,34 @@ describe "Users" do
           fill_in "Confirmation", :with => "einsgeheim"
           click_button
           response.should render_template('users/show')
-        end.should change(User, :count).by(2)
+        end.should change(User, :count).by(1)
       end
     end
   end
+  
+  describe "login/logout" do
+    describe "Fehlschlag" do
+      it "sollte einen User nicht einloggen" do
+        visit login_path
+        fill_in "Email",    :with => ""
+        fill_in "Password", :with => ""
+        click_button
+        response.should render_template("sessions/new")
+        response.should have_tag("div.flash.error", /Ungültige Kombination/i)
+      end
+    end
+    describe "Erfolg" do
+      it "sollte einen User einloggen" do
+        user = Factory(:user)
+        visit login_path
+        fill_in "Email",    :with => user.email
+        fill_in "Password", :with => user.password
+        click_button
+        controller.signed_in?.should == true 
+        click_link "Logout"
+        controller.signed_in?.should == false
+      end
+    end
+  end
+  
 end

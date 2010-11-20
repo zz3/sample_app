@@ -10,7 +10,7 @@
 <%= render :file => 'layouts/_header' %>
 <div class="round" id="content">
 <% flash.each do |key, value| %>
-	<div class="flash <%= key %>"><%= value %></div>
+		<%= content_tag(:div, value, :class => "flash #{key}") %>
 <% end %>
 	<%= yield %>
 </div>

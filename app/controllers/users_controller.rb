@@ -8,9 +8,12 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     if @user.save
       flash[:success] = "Willkommen bei der SampleApp!"
+      sign_in @user
       redirect_to @user
     else
       @title = "Sign Up"
+      @user.password = ''
+      @user.password_confirmation = ''
       render :action => 'new'
     end
   end

@@ -51,6 +51,9 @@ Spec::Runner.configure do |config|
   # == Notes
   #
   # For more information take a look at Spec::Runner::Configuration and Spec::Runner
+  def test_sign_in(user)
+    controller.current_user = user
+  end
 end
 
 require 'spec/rails'

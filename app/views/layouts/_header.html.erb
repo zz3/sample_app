@@ -3,6 +3,11 @@
 	<ul class="navigation round">
 		<li><%= link_to "Home", root_path %></li>
 		<li><%= link_to "Help", help_path %></li>
-		<li><%= link_to "Sign In", signup_path %></li>
+		<% if signed_in? %>
+		<li><%= link_to "Profile", current_user %></li>
+		<li><%= link_to "Logout", logout_path, :method => :delete %></li>
+		<% else %>
+		<li><%= link_to "Login", login_path %></li>
+		<% end %>
 	</ul>
 </div>

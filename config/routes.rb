@@ -45,8 +45,11 @@ ActionController::Routing::Routes.draw do |map|
   map.list "/list", :controller => "pages", :action => "list"
   
   map.signup "/signup", :controller => "users", :action => "new"
+  map.login "/login", :controller => "sessions", :action => "new"
+  map.logout "/logout", :controller => "sessions", :action => "destroy"
   
   map.resources :users
+  map.resources :sessions, :only => [:new, :create, :destroy]
   
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
