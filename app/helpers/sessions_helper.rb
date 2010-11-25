@@ -1,4 +1,10 @@
 module SessionsHelper
+  
+  def deny_access
+    flash[:notice] = "Bitte einloggen, um auf diese Seite zuzugreifen."
+    redirect_to login_path
+  end
+  
   def sign_in(user) 
     user.remember_me!
     cookies[:remember_token] = { :value => user.remember_token,
@@ -15,6 +21,10 @@ module SessionsHelper
     @current_user = user
   end
   
+  def current_user?(user)
+    @current_user == user
+  end
+  
   def current_user
     @current_user ||= user_from_remember_token
   end
@@ -27,4 +37,5 @@ module SessionsHelper
   def signed_in?
     !self.current_user.nil?
   end
+  
 end

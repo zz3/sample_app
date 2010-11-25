@@ -31,6 +31,7 @@ describe SessionsController do
   end
   
   describe "POST 'create'" do
+    
     describe "login schlägt fehl" do
       before(:each) do
         @attr = {:name => "beispiel", :email => "beispiel@beispiel.com", 
@@ -39,7 +40,12 @@ describe SessionsController do
           with(@attr[:email], @attr[:password]).
           and_return(nil)
       end
+      it "sollte den richtigen Titel haben" do
+        post :create, :session => @attr
+        response.should have_tag("title", /login/i)
+      end
     end
+    
     describe "login funktioniert" do
       before(:each) do
         @attr = {:name => "Hein Blöd", :email => "hein@hein.de", 
@@ -59,7 +65,7 @@ describe SessionsController do
       end
        it "sollte den User einloggen" do
          post :create, :session => @attr
-         controller.current_user.should  == @user
+         controller.current_user.should == @user
          controller.should be_signed_in
        end
        it "sollte ein redirect auslösen zur Seite users show" do
