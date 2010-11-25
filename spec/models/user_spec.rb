@@ -21,6 +21,26 @@ describe User do
     User.create!(@valid_attributes)
   end
   
+  describe "Micropost Verknüpfung" do
+    before(:each) do
+      @user = User.create(@attr)
+      @mp1 = Factory(:micropost, :user => @user, :created_at => 1.day.ago)
+      @mp2 = Factory(:micropost, :user => @user, :created_at => 1.hour.ago)
+    end
+    it "sollte das Attribut Microposts haben" do
+      @user.should respond_to(:microposts)
+    end
+#    it "sollte MPs in der richtigen Reihenfolge zeigen" do
+#      @user.microposts.should == [@mp2, @mp1]
+#    end
+    it "sollte mit dem User auch alle verknüpften MPs löschen" do
+      @user.destroy
+      [@mp1, @mp2].each do |mp|
+      Micropost.find_by_id(mp.id).should be_nil
+      end
+    end
+  end
+  
   describe "Remember token" do
     before(:each) do
       @user = User.create!(@attr)

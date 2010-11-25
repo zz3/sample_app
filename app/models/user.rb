@@ -16,6 +16,7 @@ require 'digest'
 
 class User < ActiveRecord::Base
   attr_accessor :password
+  has_many :microposts, :dependent => :destroy
   attr_accessible :name, :email, :password , :password_confirmation
   
   before_save :encrypt_password
